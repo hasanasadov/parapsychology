@@ -1,41 +1,35 @@
-// import HoverText from "./HoverText";
-// import React from "react";
-// import Link from "next/link";
-// import { CONTACT } from "@/constants/contact";
+import { PATHS } from "@/constants/paths";
+import Link from "next/link";
+import React from "react";
 
-// const Footer = () => {
-//   return (
-//     <div className="mb-12">
-//       <div className="w-full h-px dark:bg-white/30 bg-black rounded-2xl my-8"></div>
-//       <div className="flex flex-col md:flex-row text-[18px] md:text-[24px] gap-6">
-//         <div className="w-full md:w-1/2">
-//           <Link href={CONTACT.GMAIL} className="w-fit">
-//             <HoverText text="hasanaliasadov@gmail.com" />
-//           </Link>
-//         </div>
-//         <div className="w-full md:w-1/2 flex flex-col md:gap-4 gap-2">
-//           <Link className="w-fit" href={CONTACT.INSTAGRAM}>
-//             <HoverText text="Instagram" />
-//           </Link>
-//           <Link className="w-fit" href={CONTACT.LINKEDIN}>
-//             <HoverText text="LinkedIn" />
-//           </Link>
-//           <Link className="w-fit" href={CONTACT.FORM}>
-//             <HoverText text="Form" />
-//           </Link>
-//           <Link className="w-fit" href={CONTACT.GITHUB}>
-//             <HoverText text="GitHub" />
-//           </Link>
-//           <Link className="w-fit" href={CONTACT.WHATSAPP}>
-//             <HoverText text="Whatsapp" />
-//           </Link>
-//           <Link className="w-fit" href={CONTACT.PHONE}>
-//             <HoverText text="Phone" />
-//           </Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+const Footer = () => {
+  return (
+    <div className="bg-blue-950 text-white text-sm ">
+      <div className="container mx-auto px-10 flex justify-between items-center flex-col md:flex-row gap-3">
+        <div className="flex items-center hover:opacity-70 duration-300 cursor-pointer">
+          <div>© Parapsychology.az 2023 | All Rights Reserved</div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Link
+              className="hover:opacity-70 duration-300"
+              href={PATHS.SERVICE_PARAPSYCHOLOGY}
+            >
+              Simurq Parapsixologiya
+            </Link>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              className="hover:opacity-70 duration-300"
+              href={PATHS.CONTACT}
+            >
+              Əlaqə
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-// export default Footer;
+export default Footer;

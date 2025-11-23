@@ -24,7 +24,7 @@ const Navbar = () => {
 
 const NavbarRight = ({ className }: { className?: string }) => {
   return (
-    <div className={`hidden gap-5  md:flex  ${className}`}>
+    <div className={`hidden gap-5  md:flex text-black ${className}`}>
       <Link className="hover:text-blue-800 duration-300" href={PATHS.ABOUT}>
         Haqqimizda
       </Link>
