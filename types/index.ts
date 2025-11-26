@@ -29,3 +29,11 @@ export type BlogCardProps = {
   // If you prefer link-based navigation instead of onClick:
   href?: string;
 };
+
+export type ContactFormData = {
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+};

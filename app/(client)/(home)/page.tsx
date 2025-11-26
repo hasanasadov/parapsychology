@@ -242,32 +242,16 @@ const RequestsSection = () => {
   );
 };
 
-const FAQSection = () => {
+export const FAQSection = () => {
   return (
     <div className="container mx-auto mt-16 text-black bg-white  py-10 !px-4 md:!px-0  w-full  relative z-50 flex flex-col lg:flex-row items-center justify-between gap-16">
       <div className="md:w-1/2 w-full flex flex-col items-start justify-start gap-5">
         <div className="text-[#0857de] font-extrabold">| F A Q</div>
-        <div className="font-extrabold md:text-[45px] text-[30px]">
+        <div className="font-extrabold md:text-[45px] text-[30px] ">
           Ən çox verilən suallar
         </div>
 
-        <div className="flex flex-col gap-3 mt-6 mb-3 w-full ">
-          {questions.map((item, idx) => (
-            <Accordion
-              className="rounded-[5px] text-white bg-blue-950 px-6 py-3 text-md "
-              key={idx}
-              type="single"
-              collapsible
-            >
-              <AccordionItem value={`item-${idx}`}>
-                <AccordionTrigger className="!font-bold">
-                  {item.question}
-                </AccordionTrigger>
-                <AccordionContent>{item.answer}</AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ))}
-        </div>
+        <QuestionsSection theme="dark" count={4} />
       </div>
 
       <div className="w-full md:w-1/3 hidden md:block ">
@@ -279,9 +263,54 @@ const FAQSection = () => {
   );
 };
 
-const BlogsSection = () => {
+export const QuestionsSection = ({
+  theme,
+  count = questions.length,
+}: {
+  theme: string;
+  count?: number;
+}) => {
+  const isDark = theme === "dark";
+  console.log("questions count:", count);
+  console.log(questions.slice(0, count));
   return (
-    <div className="container mx-auto mt-16 text-black bg-white  py-10 !px-4 md:!px-0  w-full  relative z-50 ">
+    <div className="flex flex-col gap-3 -6 mb-3 w-full ">
+      {questions.slice(0, count).map((item, idx) => (
+        <Accordion
+          className={`rounded-[5px] ${
+            isDark ? "text-white bg-blue-950 px-6 py-3" : "text-black bg-white"
+          }  text-md `}
+          key={idx}
+          type="single"
+          collapsible
+        >
+          <AccordionItem value={`item-${idx}`}>
+            <AccordionTrigger
+              className={`!font-bold ${
+                isDark ? "" : "!text-black border border-black/10 px-6 mb-2"
+              } `}
+            >
+              {item.question}
+            </AccordionTrigger>
+            <AccordionContent
+              className={`
+                    ${isDark ? "" : "!bg-white  px-6 text-black/70 mt-1  "}
+                  `}
+            >
+              {item.answer}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      ))}
+    </div>
+  );
+};
+
+export const BlogsSection = ({ className }: { className?: string }) => {
+  return (
+    <div
+      className={`container mx-auto mt-16 text-black bg-white  py-10 !px-4 md:!px-0  w-full  relative z-50 ${className}`}
+    >
       <div className="flex flex-col items-center justify-center gap-5 w-full">
         <div className="text-[#0857de] font-extrabold space">| B l o q |</div>
         <div className="font-extrabold md:text-[45px] text-[30px] text-center">
@@ -349,7 +378,9 @@ const BlogCard: React.FC<BlogCardProps> = ({
         <div className="mb-4 h-px w-full bg-slate-100" />
 
         {/* Excerpt */}
-        <p className="text-sm leading-relaxed text-slate-600 line-clamp-5">{excerpt}</p>
+        <p className="text-sm leading-relaxed text-slate-600 line-clamp-5">
+          {excerpt}
+        </p>
 
         {/* Details button / link */}
         <div className="mt-5">
