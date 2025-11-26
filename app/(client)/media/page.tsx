@@ -61,9 +61,8 @@ import React from "react";
 
 const MediaPage = () => {
   return (
-    <div className="my-4 container mx-auto x-4">
-      <div className="w-full py-4">
-        {/* <video className="w-full" src="/para7-video.mp4" autoPlay loop muted></video> */}
+    <div className="my-4 container mx-auto !px-4">
+      <div className="w-full pb-4 transition-opacity duration-1000 ease-in-out">
         <VideoPlayer
           poster="/para1.jpg"
           sources={[
@@ -77,9 +76,11 @@ const MediaPage = () => {
           loop={false}
           initialVolume={0.8}
           defaultPlaybackRate={1}
+          fadeDurationMs={500}
+          fadeIn
         />
       </div>
-      <div className="min-h-screen">
+      <div className="md:min-h-screen min-h-[150vh]">
         <Masonry
           items={items}
           ease="power3.out"

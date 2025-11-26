@@ -23,6 +23,11 @@ interface VideoPlayerProps {
   className?: string;
   initialVolume?: number; // 0–1
   defaultPlaybackRate?: number;
+
+  // Yeni:
+  fadeIn?: boolean; // start-da səsi yavaş aç
+  fadeOut?: boolean; // pause/stop-da səsi yavaş bağla
+  fadeDurationMs?: number; // fade müddəti ms (default 1200ms)
 }
 
 const formatTime = (time: number) => {
@@ -38,11 +43,15 @@ const formatTime = (time: number) => {
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   sources,
   poster,
-  autoPlay = true,
-  loop = true,
+  autoPlay = false,
+  loop = false,
   className,
   initialVolume = 0.8,
   defaultPlaybackRate = 1,
+
+  fadeIn = false,
+  fadeOut = false,
+  fadeDurationMs = 1200,
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -58,32 +67,111 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activeSourceIndex, setActiveSourceIndex] = useState(0);
 
-  // Sync video element with state
+  // Fade ilə bağlı ref-lər
+  const fadeAnimationRef = useRef<number | null>(null);
+  const isFadingRef = useRef(false);
+  const shouldFadeInNextPlayRef = useRef(false);
+
+  const clearFade = () => {
+    if (
+      fadeAnimationRef.current !== null &&
+      typeof cancelAnimationFrame !== "undefined"
+    ) {
+      cancelAnimationFrame(fadeAnimationRef.current);
+    }
+    fadeAnimationRef.current = null;
+    isFadingRef.current = false;
+  };
+
+  const startFade = (
+    from: number,
+    to: number,
+    durationMs: number,
+    onFinish?: () => void
+  ) => {
+    const video = videoRef.current;
+    if (!video || typeof window === "undefined") return;
+
+    clearFade();
+    isFadingRef.current = true;
+
+    const start = performance.now();
+
+    const step = (now: number) => {
+      const elapsed = now - start;
+      const t = Math.min(1, elapsed / durationMs);
+      const v = from + (to - from) * t;
+
+      if (!videoRef.current) {
+        clearFade();
+        return;
+      }
+
+      videoRef.current.volume = Math.max(0, Math.min(1, v));
+
+      if (t < 1 && !videoRef.current.paused) {
+        fadeAnimationRef.current = requestAnimationFrame(step);
+      } else {
+        clearFade();
+        if (onFinish) onFinish();
+      }
+    };
+
+    // Başlanğıc dəyəri dərhal yaz
+    video.volume = from;
+    fadeAnimationRef.current = requestAnimationFrame(step);
+  };
+
+  // muted flag (volume-dan ayrı)
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
-    video.volume = volume;
     video.muted = isMuted;
+    // mute olarkən, səsi də sıfra çəkmək istəsən:
+    if (isMuted) {
+      clearFade();
+      video.volume = 0;
+    } else {
+      // unmute olanda volume state-ə qayıdaq
+      if (!isFadingRef.current) {
+        video.volume = volume;
+      }
+    }
+  }, [isMuted]);
+
+  // volume dəyişikliyini videoya ötür (fade yoxdursa)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || isFadingRef.current) return;
+    if (!isMuted) {
+      video.volume = volume;
+    }
   }, [volume, isMuted]);
 
+  // playback rate sync
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     video.playbackRate = playbackRate;
   }, [playbackRate]);
 
+  // autoplay + fade-in
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     if (autoPlay) {
+      shouldFadeInNextPlayRef.current = fadeIn;
+      // əvvəlcə səsi sıfıra endirək, sonra fade-in edəcəyik
+      if (!isMuted) {
+        video.volume = fadeIn ? 0 : volume;
+      }
       video
         .play()
         .then(() => setIsPlaying(true))
         .catch(() => setIsPlaying(false));
     }
-  }, [autoPlay, activeSourceIndex]);
+  }, [autoPlay, activeSourceIndex, fadeIn, volume, isMuted]);
 
   const handleLoadedMetadata = () => {
     const video = videoRef.current;
@@ -102,26 +190,64 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     setProgress(dur ? ct / dur : 0);
   };
 
+  const handlePlayInternal = () => {
+    setIsPlaying(true);
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Fade-in aktivləşdirmə
+    if (fadeIn && shouldFadeInNextPlayRef.current && !isMuted && volume > 0) {
+      shouldFadeInNextPlayRef.current = false;
+      startFade(0, volume, fadeDurationMs);
+    } else if (!isMuted && !isFadingRef.current) {
+      // normal play
+      video.volume = volume;
+    }
+  };
+
+  const handlePauseInternal = () => {
+    setIsPlaying(false);
+    // burada xüsusi iş görmürük, çünki fadeOut togglePlay içində həll olunur
+  };
+
   const togglePlay = () => {
     const video = videoRef.current;
     if (!video) return;
+
     if (video.paused || video.ended) {
+      // PLAY
+      shouldFadeInNextPlayRef.current = fadeIn;
+      if (fadeIn && !isMuted && volume > 0) {
+        video.volume = 0;
+      }
       video
         .play()
-        .then(() => setIsPlaying(true))
+        .then(() => {
+          // onPlay event-də fade-in baş verəcək
+        })
         .catch(() => setIsPlaying(false));
     } else {
-      video.pause();
-      setIsPlaying(false);
+      // PAUSE
+      if (fadeOut && !isMuted && volume > 0) {
+        const currentVol = video.volume;
+        startFade(currentVol, 0, fadeDurationMs, () => {
+          video.pause();
+        });
+      } else {
+        video.pause();
+      }
     }
   };
 
   const toggleMute = () => {
+    clearFade();
     setIsMuted((prev) => !prev);
   };
 
   const handleVolumeChange = (value: number) => {
     const v = Math.min(1, Math.max(0, value));
+    clearFade();
     setVolume(v);
     if (v === 0) setIsMuted(true);
     else if (isMuted) setIsMuted(false);
@@ -235,25 +361,27 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
     setActiveSourceIndex(index);
 
-    // After source change, try to restore position & state
     setTimeout(() => {
       const v = videoRef.current;
       if (!v) return;
       v.currentTime = currentTimeSnapshot;
       if (wasPlaying) {
+        shouldFadeInNextPlayRef.current = fadeIn;
+        if (fadeIn && !isMuted && volume > 0) {
+          v.volume = 0;
+        }
         v.play().catch(() => {});
       }
     }, 0);
   };
 
-  //   const currentSource = sources[activeSourceIndex];
+  // const currentSource = sources[activeSourceIndex];
 
   return (
     <div
       ref={containerRef}
       className={clsx(
         "relative flex flex-col bg-black/90 rounded-xl overflow-hidden shadow-[0_18px_60px_rgba(0,0,0,0.35)]",
-        "focus-within:ring-2 focus-within:ring-sky-500",
         className
       )}
       tabIndex={0}
@@ -269,8 +397,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           onClick={togglePlay}
           onLoadedMetadata={handleLoadedMetadata}
           onTimeUpdate={handleTimeUpdate}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
+          onPlay={handlePlayInternal}
+          onPause={handlePauseInternal}
         >
           {sources.map((source, idx) => (
             <source
@@ -313,7 +441,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           onMouseLeave={handleProgressMouseUp}
         >
           <div
-            className="absolute inset-y-0 left-0 rounded-full bg-sky-500 group-hover:bg-sky-400"
+            className="absolute inset-y-0 left-0 rounded-full bg-gray-500 group-hover:bg-gray-400"
             style={{ width: `${progress * 100}%` }}
           />
           <div
@@ -395,7 +523,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
                 step={0.01}
                 value={isMuted ? 0 : volume}
                 onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                className="h-1 w-20 cursor-pointer accent-sky-500 sm:w-24"
+                className="h-1 w-20 cursor-pointer accent-gray-500 sm:w-24"
               />
             </div>
 
