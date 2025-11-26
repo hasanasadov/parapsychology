@@ -1,10 +1,11 @@
+"use client";
 import { CONTACT } from "@/constants/contact";
 import Link from "next/link";
 import React from "react";
 
 const Hero = () => {
   return (
-    <div className="bg-sky-700 text-white text-sm ">
+    <div className="bg-sky-700 text-white text-sm relative ">
       <div className="container mx-auto px-10 flex justify-between items-center flex-col md:flex-row gap-3">
         <div className="flex items-center gap-4">
           <div className="flex gap-4 items-center font-bold md:font-normal">
@@ -30,9 +31,9 @@ const Hero = () => {
             </Link>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <div>Bizi izləyin:</div>
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-5">
+          <div>Bizi izləyin :</div>
+          <div className="flex items-center gap-2 ml-1">
             <Link
               className="hover:opacity-70 duration-300"
               href={CONTACT.FACEBOOK}

@@ -4,6 +4,7 @@ import Navbar from "@/components/shared/Navbar";
 import "@/styles/globals.css";
 import Footer from "@/components/shared/Footer";
 import Hero from "@/components/shared/Hero";
+import { Suspense } from "react";
 
 export default function RootLayout({
   children,
@@ -13,6 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <title>Parapsychology.az</title>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -21,7 +23,9 @@ export default function RootLayout({
       <body className="overflow-x-hidden ">
         <CustomLayout>
           <Hero />
-          <Navbar />
+          <Suspense>
+            <Navbar />
+          </Suspense>
           <Toaster richColors />
           <div className="min-h-screen">{children}</div>
           <Footer />

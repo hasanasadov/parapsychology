@@ -12,3 +12,20 @@ export type SelectOptionType = {
   value: string;
   label: string;
 };
+
+export type QuestionType = {
+  question: string;
+  answer: string;
+};
+
+export type BlogCardProps = {
+  className?: string;
+  imageUrl: string;
+  authorName: string;
+  title: string;
+  excerpt: string;
+  onDetailsClick?: () => void;
+  detailsLabel?: string;
+  // If you prefer link-based navigation instead of onClick:
+  href?: string;
+};
