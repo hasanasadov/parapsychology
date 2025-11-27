@@ -10,8 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { BlogCardProps } from "@/types";
-import { BLOGS } from "@/constants/blogs";
+simport { BLOGS } from "@/constants/blogs";
 import Link from "next/link";
 
 export default function Page() {
