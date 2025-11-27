@@ -20,14 +20,14 @@ export default function RootLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         />
       </head>
-      <body className="overflow-x-hidden ">
+      <body className="overflow-x-hidden dark:!bg-slate-950/90 ">
         <CustomLayout>
           <Hero />
           <Suspense>
             <Navbar />
           </Suspense>
           <Toaster richColors />
-          <div className="min-h-screen">{children}</div>
+          <div className="min-h-screen ">{children}</div>
           <Footer />
         </CustomLayout>
       </body>

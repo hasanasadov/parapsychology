@@ -17,4 +17,31 @@ export const BLOGS = [
     authorName: "Parapsixoloq A.AKHMEDOV",
     href: "/blog/2",
   },
+  {
+    id: 3,
+    title: "Şüuraltı proqramlar və həyat ssenariləri",
+    excerpt:
+      "İnsan davranışlarının böyük bir hissəsi şüuraltında formalaşmış inancların nəticəsidir. Bu inanclar bəzən uşaqlıq dövründə eşitdiyimiz bir söz, yaşadığımız bir travma və ya ailə sistemindən bizə keçən bir emosional kodlaşma ola bilər. Şüuraltı proqramlar fərdin seçimlərini, münasibətlərini, uğur səviyyəsini və hətta sağlamlıq durumunu belə təsirləndirə bilir.",
+    imageUrl: "blog-3.jpg",
+    authorName: "Parapsixoloq A.AKHMEDOV",
+    href: "/blog/3",
+  },
+  {
+    id: 4,
+    title: "Hipnoz haqqında yanlış inanclar",
+    excerpt:
+      "Hipnoz çox vaxt filmlərdəki kimi şüurun bağlandığı, insanın özünü itirdiyi və idarə olunduğu bir vəziyyət kimi təsvir edilir. Lakin elmi hipnoterapiya bu təsvirlərdən tamamilə fərqlidir. Hipnoz insanın şüurlu şəkildə rahat fokus halına keçməsi və daxili resurslarına çıxış əldə etməsi prosesidir.",
+    imageUrl: "blog-4.jpg",
+    authorName: "Parapsixoloq A.AKHMEDOV",
+    href: "/blog/4",
+  },
+  {
+    id: 5,
+    title: "Karmik əlaqələr və ruhsal inkişaf",
+    excerpt:
+      "Bəzi insanlarla qarşılaşanda qəribə bir tanışlıq hissi yaranır. Bu əlaqələr bəzən çətin, bəzən dərindən dəyişdirici olur. Spiritual yanaşmaya görə bu tip münasibətlər təsadüfi deyil — onlar ruhun inkişaf planında xüsusi yer tutur və həyat dərslərini öyrətmək üçün yaranır.",
+    imageUrl: "blog-5.webp",
+    authorName: "Parapsixoloq A.AKHMEDOV",
+    href: "/blog/5",
+  },
 ];

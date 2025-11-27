@@ -1,0 +1,166 @@
+// app/blog/[id]/page.tsx
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+// BLOGS massivini harada saxlayırsansa, ora uyğun path yaz:
+import { BLOGS } from "@/constants/blogs";
+
+type Blog = (typeof BLOGS)[number];
+
+type BlogPageProps = {
+  params: {
+    id: string;
+  };
+};
+
+// SEO üçün dinamik metadata
+export function generateMetadata({ params }: BlogPageProps): Metadata {
+  const blog = BLOGS.find((b) => String(b.id) === params.id);
+
+  if (!blog) {
+    return {
+      title: "Məqalə tapılmadı | Simurq Parapsixologiya",
+    };
+  }
+
+  const shortExcerpt =
+    blog.excerpt.length > 180
+      ? blog.excerpt.slice(0, 177) + "..."
+      : blog.excerpt;
+
+  return {
+    title: `${blog.title} | Simurq Parapsixologiya`,
+    description: shortExcerpt,
+    openGraph: {
+      title: `${blog.title} | Simurq Parapsixologiya`,
+      description: shortExcerpt,
+      images: [
+        {
+          url: `/${blog.imageUrl}`,
+        },
+      ],
+    },
+  };
+}
+
+// Statik build zamanı id-ləri əvvəlcədən generasiya etmək üçün (istəsən):
+export function generateStaticParams() {
+  return BLOGS.map((blog) => ({
+    id: String(blog.id),
+  }));
+}
+
+export default function BlogDetailPage({ params }: BlogPageProps) {
+  const blog = BLOGS.find((b) => String(b.id) === params.id);
+
+  if (!blog) {
+    notFound();
+  }
+
+  const relatedBlogs: Blog[] = BLOGS.filter((b) => b.id !== blog!.id).slice(
+    0,
+    3
+  );
+
+  return (
+    <main className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50 py-10">
+      <div className="container mx-auto max-w-4xl px-4">
+        {/* Back link */}
+        <div className="mb-4 text-sm">
+          <Link
+            href="/blog"
+            className="text-sky-600 dark:text-sky-400 hover:underline"
+          >
+            ← Bütün bloqlara qayıt
+          </Link>
+        </div>
+
+        {/* TITLE + META */}
+        <header>
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            Blog · Simurq Parapsixologiya
+          </p>
+          <h1 className="mt-2 text-3xl md:text-4xl font-bold leading-snug">
+            {blog!.title}
+          </h1>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+            {blog!.authorName}
+            {/* Tarixi konstant da qoya bilərsən, istəsən BLOGS-a field kimi də əlavə edə bilərik */}
+          </p>
+        </header>
+
+        {/* COVER IMAGE */}
+        <div className="mt-6">
+          <img
+            src={`/${blog!.imageUrl}`}
+            alt={blog!.title}
+            className="w-full rounded-xl shadow-md shadow-slate-200 dark:shadow-slate-900 object-cover max-h-[420px]"
+          />
+        </div>
+
+        {/* CONTENT */}
+        <article className="mt-8 prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-24">
+          {/* 
+            Hal-hazırda BLOGS içində yalnız "excerpt" var.
+            1-ci blogun mətni çox uzundur – faktiki full məqalədir.
+            Digərləri üçün excerpt preview rolundadır.
+            Sonradan BLOGS-a "content" adlı ayrı field də əlavə edə bilərsən.
+          */}
+          <p className="whitespace-pre-line leading-relaxed text-base md:text-lg">
+            {blog!.excerpt}
+          </p>
+        </article>
+
+        {/* CTA */}
+        <section className="mt-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 px-6 py-5">
+          <h2 className="text-lg font-semibold mb-2">
+            Mövzu ilə bağlı sualın var?
+          </h2>
+          <p className="text-sm md:text-base text-slate-700 dark:text-slate-300 mb-4">
+            Əgər bu yazıda toxunulan mövzulardan hər hansı biri sənin həyatında
+            da öz əksini tapırsa, professional yanaşma ilə bu prosesi birlikdə
+            dəyərləndirə bilərik.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center rounded-lg bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 transition"
+          >
+            Konsultasiya üçün müraciət et
+          </Link>
+        </section>
+
+        {/* RELATED POSTS */}
+        {relatedBlogs.length > 0 && (
+          <section className="mt-12 border-t border-slate-200 dark:border-slate-800 pt-8">
+            <h3 className="text-lg font-semibold mb-4">Oxşar digər bloqlar</h3>
+            <div className="grid md:grid-cols-3 gap-5">
+              {relatedBlogs.map((item) => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className="group rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden hover:border-sky-400/70 transition"
+                >
+                  <div className="h-28 w-full overflow-hidden">
+                    <img
+                      src={`/${item.imageUrl}`}
+                      alt={item.title}
+                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-3">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-[0.12em]">
+                      {item.authorName}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold line-clamp-2 group-hover:text-sky-600 dark:group-hover:text-sky-300">
+                      {item.title}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </main>
+  );
+}

@@ -1,12 +1,16 @@
 const AboutSection = () => {
   return (
-    <div className="container mx-auto mt-10 text-black bg-white py-10 !px-4 md:!px-0  w-full  relative z-50 flex flex-col lg:flex-row items-center justify-center gap-16">
-      <div className="md:w-1/2  w-full flex flex-col items-start justify-start gap-5">
-        <div className="text-[#0857de] font-bold">| Simurq Parapsixologiya</div>
-        <div className="font-extrabold md:text-[45px] text-[30px]">
+    <div className="container mx-auto mt-10 w-full relative z-50 flex flex-col lg:flex-row items-center justify-center gap-16  text-slate-900  dark:text-slate-50 py-10 !px-4 md:!px-0">
+      <div className="md:w-1/2 w-full flex flex-col items-start justify-start gap-5">
+        <div className="font-bold text-[#0857de] dark:text-sky-400">
+          | Simurq Parapsixologiya
+        </div>
+
+        <div className="font-extrabold md:text-[45px] text-[30px] text-slate-900 dark:text-slate-50">
           Simurq Parapsixologiya Psixologiya Mərkəzi
         </div>
-        <div className="text-black/40 my-1">
+
+        <div className="my-1 text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
           &ldquo;Simurq Parapsixologiya&ldquo; MMC, &ldquo;Simurq
           Parapsixologiya Psixologiya Mərkəzi&ldquo; 11.01.2022-ci ildə təssis
           edilmişdir. MMC-nin və Mərkəzin təsisçisi və rəhbəri 3 Ali təhsilli,
@@ -28,9 +32,14 @@ const AboutSection = () => {
           xidmətindədir.
         </div>
       </div>
-      <div className="w-full hidden md:flex md:w-1/2  flex-col items-start justify-start">
+
+      <div className="w-full hidden md:flex md:w-1/2 flex-col items-start justify-start">
         <div className="relative">
-          <img className=" z-[10]" src="/simurq.png" alt="" />
+          <img
+            className="z-[10] rounded-xl "
+            src="/simurq.png"
+            alt="Simurq Parapsixologiya"
+          />
         </div>
       </div>
     </div>

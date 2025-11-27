@@ -2,10 +2,11 @@
 import { CONTACT } from "@/constants/contact";
 import Link from "next/link";
 import React from "react";
+import ToggleThemeButton from "./ToggleThemeButton";
 
 const Hero = () => {
   return (
-    <div className="bg-sky-700 text-white text-sm relative ">
+    <div className="bg-sky-700 text-white text-sm relative dark:bg-blue-950  ">
       <div className="container mx-auto px-10 flex justify-between items-center flex-col md:flex-row gap-3">
         <div className="flex items-center gap-4">
           <div className="flex gap-4 items-center font-bold md:font-normal">
@@ -56,6 +57,9 @@ const Hero = () => {
             >
               <i className="fa-brands fa-tiktok"></i>
             </Link>
+          </div>
+          <div>
+            <ToggleThemeButton />
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@ const buttonVariants = cva(
         destructiveLink:
           "text-destructive underline-offset-4 hover:underline focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         custom: "glass-button px-4 py-2",
-        animated: `hover:bg-[#021a42] bg-[#0857de] !rounded-[5px] !font-bold `,
+        animated: `hover:bg-[#021a42] bg-[#0857de] dark:bg-sky-400  !rounded-[5px] !font-bold `,
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
