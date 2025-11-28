@@ -13,7 +13,7 @@ model Certificate {
   fullName   String
   courseName String
   issuedAt   DateTime
-  fileUrl    String
+  fileUrls   String[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

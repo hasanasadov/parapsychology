@@ -5,8 +5,19 @@ export type DetailPageProps = {
 };
 
 export enum CardTypeDashboard {
-  Example = "example",
+  Certificate = "certificate",
 }
+
+export type CertificateModel = {
+  id?: string;
+  code: string;
+  fullName: string;
+  courseName: string;
+  issuedAt: Date;
+  fileUrls: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+};
 
 export type SelectOptionType = {
   value: string;

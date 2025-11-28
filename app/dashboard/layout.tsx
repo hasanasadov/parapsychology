@@ -65,7 +65,7 @@ export default function DashboardPage({
 
   if (!authed) {
     return (
-      <main className="container mx-auto flex items-center justify-center h-[80vh]">
+      <main className="container mx-auto flex items-center justify-center h-[80vh] ">
         <PinInput
           inputValue={inputValue}
           setInputValue={setInputValue}
@@ -75,5 +75,5 @@ export default function DashboardPage({
     );
   }
 
-  return <div>{children}</div>;
+  return <div className="!p-4 !bg-black !text-white">{children}</div>;
 }

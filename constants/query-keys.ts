@@ -1,3 +1,3 @@
 export const QUERY_KEYS = {
-  EXAMPLE: "example",
+  CERTIFICATE_DASHBOARD: "certificate_dashboard",
 };
