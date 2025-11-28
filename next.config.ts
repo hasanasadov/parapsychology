@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  images: {
-    domains: [
-      "bry4c7uoa0.ufs.sh",
-      // ...add any other domains you use
-    ],
+  async rewrites() {
+    return [
+      {
+        source: "/certificate-check-:code",
+        destination: "/certificate-check/:code",
+      },
+    ];
   },
 };
 

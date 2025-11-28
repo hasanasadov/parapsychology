@@ -61,7 +61,7 @@ import React from "react";
 
 const MediaPage = () => {
   return (
-    <div className="my-4 container mx-auto !px-4">
+    <div className="my-4 container mx-auto !px-4 md:!px-0">
       <div className="w-full pb-4 transition-opacity duration-1000 ease-in-out">
         <VideoPlayer
           poster="/para1.jpg"
