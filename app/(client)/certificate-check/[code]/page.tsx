@@ -1,12 +1,13 @@
 import { getCertificateByCode } from "@/actions/certificates";
+import RenderIf from "@/utils/RenderIf";
 
 function parseCode(raw: string) {
   if (raw.length <= 8) {
     return { certificateNumber: raw, fin: null };
   }
 
-  const fin = raw.slice(-8);
-  const certificateNumber = raw.slice(0, -8);
+  const fin = raw.slice(-7);
+  const certificateNumber = raw.slice(0, -7);
 
   return { certificateNumber, fin };
 }
@@ -33,7 +34,7 @@ export default async function CertificatePage({
    ** ========================== */
   if (!certificate) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-black px-4">
+      <main className="min-h-[50vh] flex items-center justify-center  dark:bg-black px-4">
         <div className="container mx-auto flex justify-center">
           <div className={`${sharedContainerStyles} relative max-w-xl`}>
             <div className="hidden dark:block pointer-events-none absolute -top-20 -right-10 h-40 w-40 rounded-full bg-red-500/30 blur-3xl" />
@@ -88,12 +89,12 @@ export default async function CertificatePage({
     ? [certificate.fileUrls]
     : [];
 
+  const fileCount = fileUrls.length;
+
   return (
     <main className="min-h-screen bg-gray-100 text-gray-900 dark:bg-black dark:text-gray-100 transition-colors duration-500 px-4 py-10">
       <div className="!container mx-auto">
-        <div
-          className={`${sharedContainerStyles}  mx-auto space-y-8 relative`}
-        >
+        <div className={`${sharedContainerStyles}  mx-auto space-y-8 relative`}>
           {/* Dark mode glow */}
           <div className="hidden dark:block pointer-events-none absolute inset-0 -z-10">
             <div className="absolute -top-14 -left-14 h-40 w-40 bg-cyan-500/20 blur-3xl rounded-full" />
@@ -163,42 +164,42 @@ export default async function CertificatePage({
               )}
             </div>
 
-            {fileUrls.length ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {fileUrls.map((url, index) => (
-                    <div
-                      key={index}
-                      className="rounded-xl border border-gray-200 bg-gray-50 
+            <RenderIf condition={!!fileCount}>
+              <div
+                className={`grid grid-cols-1 ${fileCount === 1 ? "md:grid-cols-1" : "md:grid-cols-2"}  gap-4 justify-center`}
+              >
+                {fileUrls.map((url, index) => (
+                  <div
+                    key={index}
+                    className="rounded-xl border w-full border-gray-200 bg-gray-50 
                         dark:border-white/10 dark:bg-gray-950/40 p-3 space-y-2"
-                    >
-                      <div className="w-full aspect-[3/4] rounded-lg overflow-hidden border border-gray-200 dark:border-white/10 bg-white dark:bg-black">
-                        <iframe
-                          src={url}
-                          className="w-full h-full"
-                          title={`Sertifikat faylı ${index + 1}`}
-                        />
-                      </div>
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="block w-full text-center py-2 rounded-lg text-xs md:text-sm font-medium 
+                  >
+                    <div className="w-full aspect-[4/4] max-h-[70vh] rounded-lg overflow-hidden border border-gray-200 dark:border-white/10 bg-white dark:bg-black">
+                      <iframe
+                        src={url}
+                        className="w-full h-full"
+                        title={`Sertifikat faylı ${index + 1}`}
+                      />
+                    </div>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="block w-full text-center py-2 rounded-lg text-xs md:text-sm font-medium 
                           bg-blue-600 text-white hover:bg-blue-500 
                           dark:bg-cyan-500 dark:text-black dark:hover:bg-cyan-400 transition"
-                      >
-                        Faylı aç ({index + 1})
-                      </a>
-                      
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
+                    >
+                      Faylı aç ({index + 1})
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </RenderIf>
+            <RenderIf condition={!fileCount}>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Bu sertifikat üçün sistemdə fayl əlavə edilməyib.
               </p>
-            )}
+            </RenderIf>
           </section>
 
           <footer className="pt-4 border-t border-gray-200 dark:border-gray-700 text-center text-xs text-gray-500 dark:text-gray-400">

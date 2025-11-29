@@ -1,27 +1,28 @@
 import RenderIf from "@/utils/RenderIf";
+import Link from "next/link";
 
 type Props = {
   isEditing: boolean;
-  issuedAt: Date;
-  originalIssuedAt: Date;
+  issuedAt: Date | null;
+  originalCode: string;
+  originalIssuedAt: Date | string;
   setIssuedAt: (val: Date) => void;
 };
 
 export const DateSection = ({
   isEditing,
   issuedAt,
+  originalCode,
   originalIssuedAt,
   setIssuedAt,
 }: Props) => {
-  // originalIssuedAt-i təhlükəsiz parse etmək
-  const parseDate = (val: Date) => {
+  const parseDate = (val: Date | string) => {
     if (val instanceof Date) return val;
 
     const str = String(val);
     const direct = new Date(str);
     if (!Number.isNaN(direct.getTime())) return direct;
 
-    // əgər format "YYYY-MM" kimidirsə
     if (/^\d{4}-\d{2}$/.test(str)) {
       const fallback = new Date(`${str}-01`);
       if (!Number.isNaN(fallback.getTime())) return fallback;
@@ -37,9 +38,11 @@ export const DateSection = ({
   const day = String(start.getDate()).padStart(2, "0");
   const formattedDisplay = `${day}.${month}.${year}`;
 
-  // input üçün dəyər (type="month" -> "YYYY-MM")
+  // input üçün dəyər — type="date" -> "YYYY-MM-DD"
   const inputValue =
-    issuedAt instanceof Date ? issuedAt.toISOString().slice(0, 7) : "";
+    issuedAt instanceof Date && !Number.isNaN(issuedAt.getTime())
+      ? issuedAt.toISOString().slice(0, 10)
+      : "";
 
   return (
     <section className="w-full text-left">
@@ -63,11 +66,15 @@ export const DateSection = ({
             <input
               type="date"
               value={inputValue}
-              onChange={(e) => setIssuedAt(new Date(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value; // "YYYY-MM-DD"
+                if (!value) return;
+                setIssuedAt(new Date(value));
+              }}
               className="outline-none rounded-lg bg-slate-950/60 border border-white/10 px-3 py-2 text-sm md:text-[15px] text-cyan-200 focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/60 transition-all w-[9.5rem] md:w-[11rem]"
             />
             <p className="text-[11px] text-gray-500">
-              Ay və ili seç (məs: 2024-11).
+              Tarixi seç (məs: 2024-11-29).
             </p>
           </div>
         </RenderIf>
@@ -77,6 +84,11 @@ export const DateSection = ({
           <p className="text-[15px] md:text-[16px] font-medium text-gray-100">
             {formattedDisplay}
           </p>
+          <Link  href={`/certificate-check-${originalCode}`} target="_blank" rel="noopener noreferrer">
+            <span className="text-[13px] text-cyan-300 hover:underline">
+              Check certificate
+            </span>
+          </Link>
         </RenderIf>
       </div>
     </section>

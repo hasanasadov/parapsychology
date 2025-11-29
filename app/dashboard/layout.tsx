@@ -75,5 +75,5 @@ export default function DashboardPage({
     );
   }
 
-  return <div className="!p-4 !bg-black !text-white">{children}</div>;
+  return <div className="!p-4 !bg-black !text-white min-h-screen">{children}</div>;
 }

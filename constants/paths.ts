@@ -6,7 +6,9 @@ export const PATHS = {
   BLOG: "/blog",
   MEDIA: "/media",
   SERVICES: "/services",
+  CERTIFICATE_CHECK: "/certificate-check",
   SERVICE_PSYCHOLOGY: "/services/psychology",
   SERVICE_PARAPSYCHOLOGY: "/services/parapsychology",
   SERVICE_HYPNOTHERAPY: "/services/hypnotherapy",
+  DASHBOARD: "/dashboard/certificates",
 };

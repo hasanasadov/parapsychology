@@ -5,15 +5,12 @@ type Props = {
   code: string;
   fullName: string;
   courseName: string;
-  fileUrls: string[];
   setCode: (val: string) => void;
   setFullName: (val: string) => void;
   setCourseName: (val: string) => void;
-  setFileUrls: (val: string[]) => void;
   originalCode: string;
   originalFullName?: string | null;
   originalCourseName?: string | null;
-  originalFileUrls: string[];
 };
 
 export const TitleSection = ({
@@ -21,26 +18,13 @@ export const TitleSection = ({
   code,
   fullName,
   courseName,
-  fileUrls,
   setCode,
   setFullName,
   setCourseName,
-  setFileUrls,
   originalCode,
   originalFullName,
   originalCourseName,
-  originalFileUrls,
 }: Props) => {
-  const handleFileUrlsChange = (value: string) => {
-    const urls = value
-      .split(",")
-      .map((url) => url.trim())
-      .filter((url) => url !== "");
-    setFileUrls(urls);
-  };
-
-  const joinedFileUrls = fileUrls?.join(", ");
-
   return (
     <section className="w-full text-left space-y-4">
       {/* Header */}
@@ -99,23 +83,6 @@ export const TitleSection = ({
               placeholder="Kursun adı"
             />
           </div>
-
-          {/* File URLs */}
-          <div className="space-y-1">
-            <label className="text-xs text-gray-400 font-medium">
-              File URLs
-              <span className="ml-1 text-[10px] text-gray-500">
-                (vergüllə ayır)
-              </span>
-            </label>
-            <textarea
-              rows={2}
-              value={joinedFileUrls}
-              onChange={(e) => handleFileUrlsChange(e.target.value)}
-              className="w-full text-[13px] md:text-[14px] rounded-xl bg-slate-900/60 border border-white/5 px-3 py-2.5 text-gray-200 outline-none focus:ring-2 focus:ring-cyan-500/60 focus:border-cyan-500/60 transition-all placeholder:text-gray-500 resize-none"
-              placeholder="https://..., https://..."
-            />
-          </div>
         </div>
       </RenderIf>
 
@@ -151,16 +118,6 @@ export const TitleSection = ({
             </p>
             <p className="text-[15px] md:text-[16px] text-gray-200 break-words">
               {originalCourseName}
-            </p>
-          </div>
-
-          {/* File urls */}
-          <div className="space-y-0.5">
-            <p className="text-[11px] uppercase tracking-[0.14em] text-gray-500">
-              Files
-            </p>
-            <p className="text-[13px] md:text-[14px] text-gray-400 break-words">
-              {originalFileUrls?.join(", ")}
             </p>
           </div>
         </div>

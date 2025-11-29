@@ -75,8 +75,9 @@ export const FilesSection = ({
             </div>
 
             {/* Upload actions */}
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4">
+            <div className="w-fit flex md:flex-row items-start md:items-center justify-center gap-3 md:gap-4">
               <UploadButton
+                className="!text-white"
                 endpoint="pdfUploader"
                 disabled={!isEditing}
                 onClientUploadComplete={(res) => {
@@ -97,7 +98,7 @@ export const FilesSection = ({
                 }}
                 appearance={{
                   button:
-                    "custom-button p-3 md:p-4 !text-black dark:!text-white text-sm md:text-[14px]",
+                    "glass-button p-3 md:p-4 !text-white dark:!text-white text-sm md:text-[14px]",
                   container: "w-full md:w-auto",
                   allowedContent:
                     "text-xs md:text-[11px] text-gray-500 mt-1 md:mt-0",
@@ -106,15 +107,28 @@ export const FilesSection = ({
                   toast.error(`ERROR! ${error.message}`);
                 }}
               />
-
-              <Button
-                variant="ghost"
-                className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-xs md:text-sm px-2 py-1"
-                onClick={() => setFileUrls([])}
-                disabled={!isEditing || fileUrls.length === 0}
-              >
-                Hamısını sil
-              </Button>
+              <div className="flex items-center justify-center flex-col">
+                <Button
+                  variant="custom"
+                  className="text-red-400 hover:text-red-300 glass-button p-3 md:p-4 ! text-sm md:text-[14px]"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Bütün faylları silmək istədiyinizə əminsiniz?"
+                      )
+                    ) {
+                      setFileUrls([]);
+                      toast.success("Bütün fayllar silindi");
+                    }
+                  }}
+                  disabled={!isEditing || fileUrls.length === 0}
+                >
+                  Hamısını sil
+                </Button>
+                <p className="text-xs md:text-[11px] text-gray-500 !mt-1 md:mt-0">
+                  Faylların hamısını sil
+                </p>
+              </div>
             </div>
 
             {/* Previews (edit mode) */}
